@@ -25,10 +25,16 @@ jobs:
             name: "AELFFaucet.DbMigrator"
           - service: "web"
             name: "AELFFaucet.Web"
-
+    outputs:
+      short_sha: ${{ steps.vars.outputs.short_sha }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Set short git commit SHA
+        id: vars
+        run: |
+          calculatedSha=$(git rev-parse --short ${{ github.sha }})
+          echo "short_sha=$calculatedSha" >> "$GITHUB_OUTPUT"
       - name: Create image tag
         id: meta
         uses: docker/metadata-action@v5
